@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  web: &default
+    container_name: web
+    build: .
+    image: registry.gitlab.com/yellowhead/time-reporting-by-percentage:024
+    ports: 
+      - 2400:8080
+      - 8000:8000
+    command: /usr/local/bin/entrypoint-web.sh
+#    depends_on: 
+#      - php-fpm
+    volumes: &vol
+      - ./:/webroot
+      - ./resources/django.conf:/etc/httpd/conf.d/django.conf:rw
+    environment: &env
+      - DOMAIN_NAME=${HOSTNAME}:2400
+      - APP_ENV=${ENVNAME}
+      - DATABASE_USER=dbuser
+      - DATABASE_PASS=111
+      - DB_HOST=db
+      - DB_ENGINE=django.db.backends.postgresql
+      - CSRF_TRUSTED_ORIGINS='http://*'
+      - SENDGRID_API_KEY=
+      - DEBUG="True"
+    networks: &appnetworks
+      - appnet
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: bitnami/postgresql:14
+    volumes:
+      - pgdata:/bitnami/postgresql
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_PASSWORD: 111
+      POSTGRES_USER: dbuser
+      # PGDATA: /bitnami/postgresql
+      POSTGRESQL_DATABASE: trbp
+      POSTGRESQL_POSTGRES_PASSWORD: 654987
+    networks: *appnetworks
+
+
+  init:
+    container_name: init
+    image: busybox
+    volumes:
+      - pgdata:/bitnami/postgresql
+    command: ['sh' , '-c' , 'chmod  0700 /bitnami/postgresql/data']
+  phppgadmin:
+    container_name: phppgadmin
+    restart: always
+    image: bitnami/phppgadmin-archived
+    user: "1001:0"
+    ports:
+    - "2410:8080"
+    - '8443:8443'
+    depends_on:
+      - db
+    environment:
+    - DATABASE_HOST=db
+    - DATABASE_PORT_NUMBER=5432
+    networks: *appnetworks
+
+networks:
+  appnet:
+volumes:
+  pgdata:

@@ -1,0 +1,36 @@
+{% extends  'main.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="content-wrapper">
+    <div class="container-fluid pt-4 px-4">
+      <h3 class="text-left">Edit your profile</h3>
+      <hr>
+      <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <form class="form"  method="POST">
+            {% csrf_token %}
+            
+            <div class="control-group"> 
+                {{form|crispy}}
+                  </div>
+                 
+                    <div class="form__action">
+                        <a class="btn btn-primary" href="{% url 'home' %}">Cancel</a>
+                        <button class="btn btn-success" type="submit">Update</button>
+                    </div>
+              </form>
+            
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    </div>
+    
+{% endblock content %}
+    
+    
+    

@@ -1,0 +1,10 @@
+**/__pycache__/
+ENV
+/ENV
+db.sqlite3
+yh_forms/settings_dev.py
+ENV/
+base/__pycache__/
+settings.cpython-310.pyc
+__pycache__
+yh_forms/__pycache__/settings.cpython-310.pyc
