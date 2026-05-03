@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn yh_forms.wsgi:application --bind 0.0.0.0:8080 --workers 2 --timeout 120"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py createsuperuser --noinput --username admin --email admin@example.com || true && python manage.py collectstatic --noinput && gunicorn yh_forms.wsgi:application --bind 0.0.0.0:8080 --workers 2 --timeout 120"]
