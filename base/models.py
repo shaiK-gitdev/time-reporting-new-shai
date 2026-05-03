@@ -1,10 +1,5 @@
-from re import T
-from tkinter import CASCADE
-from turtle import title
-from urllib import request
 from django.db import models
-from django.contrib.auth.models import User 
-from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 
 
 
