@@ -45,20 +45,12 @@ def get_value(env_variable, default=None):
     try:
         return os.environ[env_variable]
     except KeyError:
-        if os.path.exists(".env"):
-            # Load environment variables from .env file (optional, for development/testing)
-            from pathlib import Path
-
-            BASE_DIR = Path(__file__).resolve().parent.parent
-            decouple.config(
-                cast=True, dotenv_path=BASE_DIR / ".env"
-            )  # Load from specific .env path
-            return config(env_variable, default=default)
-        else:
-            error_msg = "!! Set the {} environment variable or create a .env file with it.".format(
-                env_variable
-            )
-            raise ImproperlyConfigured(error_msg)
+        if default is not None:
+            return default
+        error_msg = "!! Set the {} environment variable or create a .env file with it.".format(
+            env_variable
+        )
+        raise ImproperlyConfigured(error_msg)
 
 
 # Every environment will use different seceret key
