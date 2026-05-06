@@ -1,185 +1,261 @@
-    <!-- partial:partials/_navbar.html -->
-    {% load static %}
-   
-    <!-- partial:partials/_navbar.html -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="navbar-brand-wrapper d-flex justify-content-center">
-        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-          <a class="navbar-brand brand-logo" href="{% url 'home'%}"><img src="{% static 'img\yhlogo.png'%}" alt="logo"/></a>
-          <a class="navbar-brand brand-logo-mini" href="{% url 'home'%}"><img src="{% static 'img\yhlogo.png'%}" alt="logo"/></a>
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <iconify-icon icon="carbon:collapse-all"></iconify-icon>
-          </button>
+{% load static %}
+
+<!-- ===================================================================
+     TOP NAVBAR
+     =================================================================== -->
+<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+
+  <!-- Logo / Brand area (same width as sidebar) -->
+  <div class="navbar-brand-wrapper d-flex justify-content-center">
+    <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+
+      <!-- Full logo (visible on desktop) -->
+      <a class="navbar-brand brand-logo" href="{% url 'home' %}">
+        <img src="{% static 'img/yhlogo.png' %}" alt="yellowHEAD logo" />
+      </a>
+
+      <!-- Mini logo (visible on mobile) -->
+      <a class="navbar-brand brand-logo-mini" href="{% url 'home' %}">
+        <img src="{% static 'img/yhlogo.png' %}" alt="YH" style="height:28px;" />
+      </a>
+
+      <!-- Sidebar toggle (desktop minimize / mobile open) -->
+      <button class="navbar-toggler sidebar-toggle-btn"
+              id="sidebarToggleBtn"
+              type="button"
+              aria-label="Toggle sidebar">
+        <iconify-icon icon="heroicons:bars-3"></iconify-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right portion of top navbar -->
+  <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+
+    <!-- User profile + last login -->
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item nav-profile d-flex align-items-center gap-2">
+        <img src="{% static 'img/Picture3.jpg' %}" alt="{{ request.user }}" />
+        <span class="nav-profile-name">{{ request.user }}</span>
+      </li>
+      <li class="nav-item nav-user-status d-none d-md-flex align-items-center">
+        <p class="mb-0">
+          <iconify-icon icon="ph:clock" style="font-size:0.85rem; margin-right:3px;"></iconify-icon>
+          Last login: {{ last_login|timesince }} ago
+        </p>
+      </li>
+    </ul>
+
+    <!-- Right-aligned: date + logout -->
+    <ul class="navbar-nav navbar-nav-right">
+
+      <!-- Today's date -->
+      <li class="nav-item nav-date d-none d-sm-flex">
+        <a class="nav-link d-flex align-items-center gap-1" href="javascript:void(0);" tabindex="-1">
+          <iconify-icon icon="ph:calendar-blank"></iconify-icon>
+          <span class="date mb-0">{{ current_datetime }}</span>
+        </a>
+      </li>
+
+      <!-- Logout -->
+      <li class="nav-item">
+        <a class="count-indicator" href="{% url 'logout' %}" title="Logout" aria-label="Logout">
+          <iconify-icon icon="material-symbols:logout"></iconify-icon>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</nav>
+<!-- END TOP NAVBAR -->
+
+<!-- ===================================================================
+     BREADCRUMB / QUICK-ACTION BAR
+     =================================================================== -->
+<nav class="navbar-breadcrumb col-xl-12 col-12 d-flex flex-row">
+
+  <!-- Quick-link icons -->
+  <div class="navbar-links-wrapper d-flex align-items-stretch">
+
+    <div class="nav-link">
+      <a href="{% url 'home' %}" title="Home">
+        <iconify-icon icon="material-symbols:home"></iconify-icon>
+      </a>
+    </div>
+
+    <div class="nav-link">
+      <a href="{% url 'create-form' %}" title="Create Form">
+        <iconify-icon icon="clarity:form-line"></iconify-icon>
+      </a>
+    </div>
+
+    <div class="nav-link">
+      <a href="{% url 'create-tit' %}" title="Create Title">
+        <iconify-icon icon="ant-design:form-outlined"></iconify-icon>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Center: app name tag -->
+  <div class="navbar-menu-wrapper d-flex align-items-center">
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item">
+        <h4 class="mb-0">yellowHEAD <span style="color:var(--accent);">{{ a|upper }}</span></h4>
+      </li>
+    </ul>
+
+    <!-- Search -->
+    <ul class="navbar-nav navbar-nav-right">
+      <li class="nav-item nav-search d-none d-md-block">
+        <form class="header__search" method="GET">
+          <div class="input-group">
+            <input name="q"
+                   type="text"
+                   class="form-control"
+                   placeholder="Search for title…"
+                   aria-label="Search titles"
+                   aria-describedby="searchBtn" />
+            <span class="input-group-text" id="searchBtn">
+              <iconify-icon icon="ic:outline-search"></iconify-icon>
+            </span>
+          </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+<!-- END BREADCRUMB BAR -->
+
+<!-- ===================================================================
+     SIDEBAR + PAGE BODY WRAPPER
+     =================================================================== -->
+<div class="container-fluid page-body-wrapper">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+
+      <!-- ---- Dashboards ---- -->
+      <li class="nav-item">
+        <a class="nav-link collapsed"
+           data-bs-toggle="collapse"
+           data-bs-target="#collapse-dashboards"
+           aria-expanded="false"
+           aria-controls="collapse-dashboards">
+          <i class="menu-icon">
+            <iconify-icon icon="fluent-mdl2:b-i-dashboard"></iconify-icon>
+          </i>
+          <span class="menu-title">Dashboards</span>
+        </a>
+        <div class="collapse" id="collapse-dashboards">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">User Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user-dashm' %}">User Current Month</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'manger-dash' %}">Manager Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'manger-dashm' %}">Manager Current Month</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dm-dash' %}">DM Dashboard</a>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        <ul class="navbar-nav mr-lg-2">
-          <li class="nav-item nav-profile">
-            <a >
-              <img src="{% static 'img\Picture3.jpg'%}" alt="profile"/>
-              <span class="nav-profile-name">{{request.user}}</span>
-            </a>
-          </li>
-          <li class="nav-item nav-user-status dropdown">
-              <p class="mb-0">Last login was {{last_login|timesince }} ago.</p>
-          </li>
-        </ul>
-        <ul class="navbar-nav navbar-nav-right">
-          <li class="nav-item nav-date dropdown">
-            <a class="nav-link d-flex justify-content-center align-items-center" href="javascript:;">
-              <h6 class="date mb-0">Today : {{current_datetime}}</h6>
-              <i class="typcn typcn-calendar"></i>
-            </a>
-          </li>
-          <li class="nav-item dropdown mr-0">
-            <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"  href="{% url 'logout'%}" >
-              <iconify-icon icon="material-symbols:logout" title="logout"></iconify-icon>
-            </a>
-          </li>
-        </ul>
-  
-      </div>
-    </nav>
-    <!-- partial -->
-    <nav class="navbar-breadcrumb col-xl-12 col-12 d-flex flex-row p-0">
-      <div class="navbar-links-wrapper d-flex align-items-stretch">
-        <div class="nav-link">
-          <a href="{% url 'home' %}" title="Home">
-           
-            <i class="typcn typcn-calendar-outline"><iconify-icon icon="material-symbols:home"></iconify-icon>
-               </i></a>
+      </li>
+
+      <!-- ---- Forms ---- -->
+      <li class="nav-item">
+        <a class="nav-link collapsed"
+           data-bs-toggle="collapse"
+           data-bs-target="#collapse-forms"
+           aria-expanded="false"
+           aria-controls="collapse-forms">
+          <i class="menu-icon">
+            <iconify-icon icon="clarity:form-line"></iconify-icon>
+          </i>
+          <span class="menu-title">Forms</span>
+        </a>
+        <div class="collapse" id="collapse-forms">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'create-form' %}">Create Form</a>
+            </li>
+          </ul>
         </div>
-        <div class="nav-link">
-          <a href="{% url 'create-form' %}" title="Create Form">
-            <i class="typcn typcn-document-text"><iconify-icon icon="clarity:form-line"></iconify-icon></i></a>
+      </li>
+
+      <!-- ---- Titles ---- -->
+      <li class="nav-item">
+        <a class="nav-link collapsed"
+           data-bs-toggle="collapse"
+           data-bs-target="#collapse-titles"
+           aria-expanded="false"
+           aria-controls="collapse-titles">
+          <i class="menu-icon">
+            <iconify-icon icon="ic:baseline-title"></iconify-icon>
+          </i>
+          <span class="menu-title">Titles</span>
+        </a>
+        <div class="collapse" id="collapse-titles">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'tit-page' %}">Titles Page</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'create-tit' %}">Create Title</a>
+            </li>
+          </ul>
         </div>
-        <div class="nav-link">
-          <a href="{%url 'create-tit' %}" title="Create Title">
-            <i class="typcn typcn-folder"> <iconify-icon icon="ant-design:form-outlined"></iconify-icon></i></a>
+      </li>
+
+      <!-- ---- Charts ---- -->
+      <li class="nav-item">
+        <a class="nav-link collapsed"
+           data-bs-toggle="collapse"
+           data-bs-target="#collapse-charts"
+           aria-expanded="false"
+           aria-controls="collapse-charts">
+          <i class="menu-icon">
+            <iconify-icon icon="simple-icons:soundcharts"></iconify-icon>
+          </i>
+          <span class="menu-title">Charts</span>
+        </a>
+        <div class="collapse" id="collapse-charts">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'charts' %}">Chart</a>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        <ul class="navbar-nav mr-lg-2">
-          <li class="nav-item ml-0">
-            <h4 class="mb-0">Yellowhead {{a|upper}}</h4>
-          </li>
-          <li class="nav-item">
-   
-          </li>
-        </ul>
-        <!-- serch -->
-        <ul class="navbar-nav navbar-nav-right">
-          <li class="nav-item nav-search d-none d-md-block mr-0">
-            <form class="header__search" method="GET" >
-            <div class="input-group">
-              <input name="q" type="text" class="form-control" placeholder="Search for title..." aria-label="search" aria-describedby="search">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="search">
-                  <i class=""><iconify-icon icon="ic:outline-search"></iconify-icon></i>
+      </li>
 
-                </span>
-              </div>
-            </div>
-          </form>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    <div class="container-fluid page-body-wrapper">
- 
-      <!-- partial -->
-      <!-- partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'home'%}">
-              <i class="typcn typcn-device-desktop menu-icon"></i>
-              <span class="menu-title">UI Elements</span>
-              <div class="badge badge-danger">new</div>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="menu-icon"><iconify-icon icon="fluent-mdl2:b-i-dashboard" class="menu-arrow"></iconify-icon></i>
-              <span class="menu-title">Dashboards</span>
-          
-              
-              
-            </a>
-            <div class="collapse" id="ui-basic">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{% url 'home'%}">User Dashboard</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'user-dashm'%}">User Current Month</a></li>
-                
-                <li class="nav-item"> <a class="nav-link" href="{% url 'manger-dash'%}">Manger Dashboard</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'manger-dashm'%}">Manger Current Month </a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'dm-dash'%}">DM Dashboard</a></li>
+      <!-- ---- User Pages ---- -->
+      <li class="nav-item">
+        <a class="nav-link collapsed"
+           data-bs-toggle="collapse"
+           data-bs-target="#collapse-auth"
+           aria-expanded="false"
+           aria-controls="collapse-auth">
+          <i class="menu-icon">
+            <iconify-icon icon="mdi:user-heart"></iconify-icon>
+          </i>
+          <span class="menu-title">User Pages</span>
+        </a>
+        <div class="collapse" id="collapse-auth">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'update-user' %}">Update User</a>
+            </li>
+          </ul>
+        </div>
+      </li>
 
-              </ul>
-              
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
-              <i class="menu-icon"><iconify-icon icon="clarity:form-line"></iconify-icon></i>
-              <span class="menu-title">Forms</span>
-         
-
-              
-            </a>
-            <div class="collapse" id="form-elements">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="{% url 'create-form'%}">Create Form</a></li>
-              </ul>
-
-          
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#form-elements1" aria-expanded="false" aria-controls="form-elements">
-              <i class="menu-icon"><iconify-icon icon="ic:baseline-title"></iconify-icon></i>
-              <span class="menu-title">Titles</span>
-          
-            </a>
-            <div class="collapse" id="form-elements1">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="{% url 'tit-page'%}">Titles Page</a></li>
-              </ul>
-
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="{% url 'create-tit'%}">Create Tiltle</a></li>
-              </ul>
-          
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-              <i class="menu-icon"><iconify-icon icon="simple-icons:soundcharts"></iconify-icon></i>
-              <span class="menu-title">Charts</span>
-         
-            </a>
-            <div class="collapse" id="charts">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{% url 'charts'%}">Chart</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-              <i class="menu-icon"><iconify-icon icon="mdi:user-heart"></iconify-icon></i>
-              <span class="menu-title">User Pages</span>
-            </a>
-            <div class="collapse" id="auth">
-              <ul class="nav flex-column sub-menu">
-       
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item"><a class="nav-link" href="{% url 'update-user'%}">update-user</a></li>
-                </ul>
-
-           
-              </ul>
-            </div>
-          </li>
-
-        </ul>
-      </nav>
+    </ul>
+  </nav>
+  <!-- END SIDEBAR -->
